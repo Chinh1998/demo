@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import com.quangchinh.demo.model.User;
+import com.quangchinh.demo.dao.User;
 
 @RestController
 @RequestMapping("/users")

@@ -1,51 +1,47 @@
 package com.quangchinh.demo.service;
 
-import com.quangchinh.demo.model.User;
+import com.quangchinh.demo.dao.User;
+import com.quangchinh.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private List<User> listUser = new ArrayList<>();
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User create(User user) {
-        listUser.add(user);
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     public List<User> getAll() {
-        return listUser;
+        return userRepository.findAll();
     }
 
     @Override
     public User getById(String id) {
-        for (User user : listUser) {
-            if (user.getId().equals(id))
-                return user;
-        }
-        return null;
+        Optional<User> userOptional= userRepository.findById(id);
+        return userOptional.orElse(null);
     }
 
     @Override
     public User updateUser(User user) {
-        for (User user1 : listUser) {
-            if (user1.getId().equals(user.getId())) {
-                user1.setName(user.getName());
-                user1.setAddress(user.getAddress());
-            }
-            return user1;
-        }
-        return null;
+        return userRepository.save(user);
     }
 
     @Override
     public boolean deleteUser(String id) {
-        listUser.removeIf(user -> user.getId().equals(id));
-        return true;
+       userRepository.deleteById(id);
+       return true;
     }
 }

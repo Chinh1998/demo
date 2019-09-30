@@ -1,6 +1,6 @@
 package com.quangchinh.demo.service;
 
-import com.quangchinh.demo.model.User;
+import com.quangchinh.demo.dao.User;
 
 import java.util.List;
 
