@@ -23,7 +23,6 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAll();
     }
-    @GetMapping("/login")
 
     @PostMapping
     public User createUser(@RequestBody User user) {

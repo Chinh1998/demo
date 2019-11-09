@@ -1,14 +1,19 @@
 package com.quangchinh.demo.dao;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user_table")
 public class User {
 
@@ -16,19 +21,10 @@ public class User {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    private String userName;
+    private String username;
     private String password;
     private String nbphone;
     private String mail;
-
-    public User() {
-    }
-
-    public User(User user) {
-        this.id = user.getId();
-        this.userName = user.getUserName();
-        this.password = user.getPassword();
-        this.nbphone = user.getNbphone();
-        this.mail = user.getMail();
-    }
+    @ManyToMany
+    Set<Role> roles;
 }
