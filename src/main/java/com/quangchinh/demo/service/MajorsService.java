@@ -5,6 +5,7 @@ import com.quangchinh.demo.dao.Majors;
 import java.util.List;
 
 public interface MajorsService {
+
     Majors create(Majors majors);
 
     List<Majors> getAll();

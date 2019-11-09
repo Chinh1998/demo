@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -29,8 +30,24 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public List<News> getAllShortenedContent() {
+        List<News> allNews = getAll();
+        return allNews.stream().map(news -> {
+            News shortenedNews = new News();
+            shortenedNews.setId(news.getId());
+            shortenedNews.setTitle(news.getTitle());
+            shortenedNews.setImage(news.getImage());
+            shortenedNews.setApproved(news.isApproved());
+            String shortenedContent = news.getContent().substring(0, 150) + "...";
+            shortenedNews.setContent(shortenedContent);
+            shortenedNews.setView(news.getView());
+            return shortenedNews;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
     public News getById(String id) {
-        Optional<News> newsOptional= newsRepository.findById(id);
+        Optional<News> newsOptional = newsRepository.findById(id);
         return newsOptional.orElse(null);
     }
 
@@ -41,7 +58,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean deleteNews(String id) {
-       newsRepository.deleteById(id);
+        newsRepository.deleteById(id);
         return true;
     }
 }

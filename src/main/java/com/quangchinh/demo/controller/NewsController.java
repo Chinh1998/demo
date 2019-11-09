@@ -29,7 +29,7 @@ public class NewsController {
 
     @GetMapping
     public List<News> getAllNews() {
-        return newsService.getAll();
+        return newsService.getAllShortenedContent();
     }
 
     @PostMapping()

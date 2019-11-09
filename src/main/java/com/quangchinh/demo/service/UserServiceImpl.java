@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(String id) {
-        Optional<User> userOptional= userRepository.findById(id);
+        Optional<User> userOptional = userRepository.findById(id);
         return userOptional.orElse(null);
     }
 
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteUser(String id) {
-       userRepository.deleteById(id);
-       return true;
+        userRepository.deleteById(id);
+        return true;
     }
 }

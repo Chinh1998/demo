@@ -15,12 +15,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/cmt")
 public class CommentController {
+
     private final CommentService commentService;
     private final UserService userService;
     private final NewsService newsService;
 
     @Autowired
-    CommentController(CommentService commentService, UserService userService, NewsService newsService){
+    CommentController(CommentService commentService, UserService userService, NewsService newsService) {
         this.commentService = commentService;
         this.userService = userService;
         this.newsService = newsService;

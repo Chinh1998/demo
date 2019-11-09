@@ -10,6 +10,8 @@ public interface NewsService {
 
     List<News> getAll();
 
+    List<News> getAllShortenedContent();
+
     News getById(String id);
 
     News updateNews(News news);
