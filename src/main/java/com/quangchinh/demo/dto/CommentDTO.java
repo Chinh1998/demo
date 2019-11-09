@@ -1,5 +1,6 @@
 package com.quangchinh.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +8,8 @@ import lombok.Setter;
 @Setter
 public class CommentDTO {
 
-    private String id;
-    private String content_cmt;
-    private String userId;
+    @JsonProperty("content_cmt")
+    private String content;
+    private String userId; // Camelcase
     private String newsId;
 }

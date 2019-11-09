@@ -6,22 +6,20 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+
 @Getter
 @Setter
 @Entity
-@Table(name = "news_Table")
-public class News {
+@Table(name = "majors_Table")
+public class Majors {
 
     @Id
     @GeneratedValue(generator ="uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    private String title;
-    private String image;
-    private String content;
-    private int view;
-    private boolean approved;
+    private String maNganh;
+    private String name;
     @ManyToOne
-    @JoinColumn(name ="user_id")
-    private User user;
+    @JoinColumn(name ="news_id")
+    private News news;
 }

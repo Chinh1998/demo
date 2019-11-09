@@ -4,7 +4,7 @@ import com.quangchinh.demo.dao.Comment;
 import com.quangchinh.demo.dao.News;
 import com.quangchinh.demo.dao.User;
 import com.quangchinh.demo.dto.CommentDTO;
-import com.quangchinh.demo.service.CmtService;
+import com.quangchinh.demo.service.CommentService;
 import com.quangchinh.demo.service.NewsService;
 import com.quangchinh.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,23 +14,24 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cmt")
-public class CmtController {
-    private final CmtService cmtService;
+public class CommentController {
+    private final CommentService commentService;
     private final UserService userService;
     private final NewsService newsService;
 
     @Autowired
-    CmtController(CmtService cmtService, UserService userService, NewsService newsService){
-        this.cmtService = cmtService;
+    CommentController(CommentService commentService, UserService userService, NewsService newsService){
+        this.commentService = commentService;
         this.userService = userService;
         this.newsService = newsService;
     }
+
     @GetMapping
     public List<Comment> getAllComment() {
-        return cmtService.getAll();
+        return commentService.getAll();
     }
 
-    @PostMapping
+    @PostMapping(produces = "application/x-www-form-urlencoded;charset=UTF-8")
     public Comment createComment(@RequestBody CommentDTO commentDTO) {
         String userId = commentDTO.getUserId();
         User user = userService.getById(userId);
@@ -42,27 +43,26 @@ public class CmtController {
         }
 
         Comment comment = new Comment();
-        comment.setId(commentDTO.getId());
-        comment.setContent_cmt(commentDTO.getContent_cmt());
+        comment.setContent_cmt(commentDTO.getContent());
         comment.setUser(user);
         comment.setNews(news);
 
-        return cmtService.create(comment);
+        return commentService.create(comment);
     }
 
     @GetMapping("/{id}")
     public Comment getComment(@PathVariable String id) {
-        return cmtService.getById(id);
+        return commentService.getById(id);
     }
 
     @PutMapping("/{id}")
     public Comment updateComment(@PathVariable String id, @RequestBody Comment comment) {
         comment.setId(id);
-        return cmtService.updateComment(comment);
+        return commentService.updateComment(comment);
     }
 
     @DeleteMapping("/{id}")
     public Boolean deleteComment(@PathVariable String id) {
-        return cmtService.deleteComment(id);
+        return commentService.deleteComment(id);
     }
 }
