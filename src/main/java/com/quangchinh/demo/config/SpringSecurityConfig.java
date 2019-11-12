@@ -27,13 +27,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic()
                 .and().authorizeRequests()
                 // User controller
-                .antMatchers("/users/*").hasAnyRole("ADMIN")
-                // Comment controller
-                .antMatchers("/cmt/*").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/news").hasRole("ADMIN")
+                .antMatchers("/users/register").permitAll()
+                .antMatchers("/users").hasRole("ADMIN")
+                .antMatchers("/users/**").hasRole("MEMBER")
+                .antMatchers(HttpMethod.POST,"/users").hasAnyRole("ADMIN","MEMBER")
+                .antMatchers(HttpMethod.DELETE,"/users").hasAnyRole("ADMIN","MEMBER")
+                .antMatchers(HttpMethod.PUT,"/users").hasAnyRole("ADMIN","MEMBER")
+                //News Controller
+                .antMatchers("/news").permitAll()
+                .antMatchers(HttpMethod.POST,"/news").hasAnyRole("ADMIN","MEMBER")
+                .antMatchers(HttpMethod.DELETE,"/news/**").hasAnyRole("ADMIN","MEMBER")
+
+                .antMatchers(HttpMethod.PUT,"/news").hasAnyRole("ADMIN","MEMBER")
                 // Disable form login
                 .and().csrf().disable()
-                .formLogin().disable();
+                .formLogin()
+                .and()
+                .logout();
     }
 
     @Autowired

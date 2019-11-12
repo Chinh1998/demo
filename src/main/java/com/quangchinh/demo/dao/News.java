@@ -1,5 +1,6 @@
 package com.quangchinh.demo.dao;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -24,4 +25,8 @@ public class News {
     @ManyToOne
     @JoinColumn(name ="user_id")
     private User user;
+    @OneToOne
+    @JoinColumn(name ="major_id")
+    @JsonProperty("major_id")
+    private Majors majors;
 }

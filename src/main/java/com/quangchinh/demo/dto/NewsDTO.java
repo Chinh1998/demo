@@ -14,4 +14,6 @@ public class NewsDTO {
     private boolean approved;
     @JsonProperty("user_id")
     private String userId;
+    @JsonProperty("major_id")
+    private String majorId;
 }

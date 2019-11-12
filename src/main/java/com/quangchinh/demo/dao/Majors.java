@@ -19,7 +19,4 @@ public class Majors {
     private String id;
     private String maNganh;
     private String name;
-    @ManyToOne
-    @JoinColumn(name ="news_id")
-    private News news;
-}
+   }

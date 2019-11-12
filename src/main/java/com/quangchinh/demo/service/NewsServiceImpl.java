@@ -46,6 +46,11 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public List<News> getByMajorId(String majorId) {
+        return newsRepository.findAllbyMajorId(majorId);
+    }
+
+    @Override
     public News getById(String id) {
         Optional<News> newsOptional = newsRepository.findById(id);
         return newsOptional.orElse(null);

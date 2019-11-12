@@ -9,5 +9,4 @@ public class MajorsDTO {
 
     private String maNganh;
     private String name;
-    private News newsId;
 }
