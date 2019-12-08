@@ -1,6 +1,5 @@
 package com.quangchinh.demo.service;
 
-import com.quangchinh.demo.dao.Comment;
 import com.quangchinh.demo.dao.News;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public interface NewsService {
 
     List<News> getAllShortenedContent();
 
-    List<News> getByMajorId(String majorId);
+    List<News> getNewsByMajorsId(String id);
 
     News getById(String id);
 

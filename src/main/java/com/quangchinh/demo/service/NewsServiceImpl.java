@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 public class NewsServiceImpl implements NewsService {
 
@@ -46,8 +47,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> getByMajorId(String majorId) {
-        return newsRepository.findAllbyMajorId(majorId);
+    public List<News> getNewsByMajorsId(String id) {
+        return newsRepository.findNewsByMajorsId(id);
     }
 
     @Override

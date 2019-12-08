@@ -6,7 +6,6 @@ import com.quangchinh.demo.dao.News;
 import com.quangchinh.demo.dao.User;
 import com.quangchinh.demo.service.MajorsService;
 import com.quangchinh.demo.service.NewsService;
-import com.quangchinh.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,9 +28,9 @@ public class MajorsController {
         return majorsService.getAll();
     }
 
-    @GetMapping("/news/{id}")
-    public List<News> getNewsMajor(@PathVariable String id) {
-        return newsService.getByMajorId(id);
+    @GetMapping("/{id}/news")
+    public List<News> getMajorNews(@PathVariable String id) {
+        return newsService.getNewsByMajorsId(id);
     }
 
     @PostMapping

@@ -40,7 +40,7 @@ public class NewsController {
     public News createNews(@RequestBody NewsDTO newsDto) {
         String userId = newsDto.getUserId();
         User user = userService.getById(userId);
-        String majorId = newsDto.getMajorId();
+        String majorId = newsDto.getMajorsId();
         Majors majors = majorsService.getById(majorId);
         if (user == null) {
             return null;

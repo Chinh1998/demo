@@ -25,8 +25,7 @@ public class News {
     @ManyToOne
     @JoinColumn(name ="user_id")
     private User user;
-    @OneToOne
-    @JoinColumn(name ="major_id")
-    @JsonProperty("major_id")
+    @ManyToOne
+    @JoinColumn(name ="majors_id")
     private Majors majors;
 }
