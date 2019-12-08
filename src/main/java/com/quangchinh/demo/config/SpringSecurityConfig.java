@@ -1,5 +1,6 @@
 package com.quangchinh.demo.config;
 
+import com.quangchinh.demo.security.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,15 +11,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
 
     @Autowired
-    public SpringSecurityConfig(UserDetailsService userDetailsService) {
+    public SpringSecurityConfig(UserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     // Secure the endpoints with HTTP Basic authentication
@@ -31,20 +35,22 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/login").permitAll()
                 .antMatchers("/users").hasRole("ADMIN")
                 .antMatchers("/users/**").hasRole("MEMBER")
-                .antMatchers(HttpMethod.POST,"/users").hasAnyRole("ADMIN","MEMBER")
-                .antMatchers(HttpMethod.DELETE,"/users").hasAnyRole("ADMIN","MEMBER")
-                .antMatchers(HttpMethod.PUT,"/users").hasAnyRole("ADMIN","MEMBER")
+                .antMatchers(HttpMethod.POST, "/users").hasAnyRole("ADMIN", "MEMBER")
+                .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN", "MEMBER")
+                .antMatchers(HttpMethod.PUT, "/users").hasAnyRole("ADMIN", "MEMBER")
                 //News Controller
                 .antMatchers("/news").permitAll()
-                .antMatchers(HttpMethod.POST,"/news").hasAnyRole("ADMIN","MEMBER")
-                .antMatchers(HttpMethod.DELETE,"/news/**").hasAnyRole("ADMIN","MEMBER")
+                .antMatchers(HttpMethod.POST, "/news").hasAnyRole("ADMIN", "MEMBER")
+                .antMatchers(HttpMethod.DELETE, "/news/**").hasAnyRole("ADMIN", "MEMBER")
 
-                .antMatchers(HttpMethod.PUT,"/news").hasAnyRole("ADMIN","MEMBER")
+                .antMatchers(HttpMethod.PUT, "/news").hasAnyRole("ADMIN", "MEMBER")
                 // Disable form login
                 .and().csrf().disable()
                 .formLogin()
                 .and()
                 .logout();
+        // Add a filter to validate the tokens with every request
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Autowired
