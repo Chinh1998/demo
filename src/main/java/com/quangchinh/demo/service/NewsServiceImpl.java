@@ -48,7 +48,39 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> getNewsByMajorsId(String id) {
-        return newsRepository.findNewsByMajorsId(id);
+        List<News> majorNews= newsRepository.findNewsByMajorsId(id);
+        return majorNews.stream().map(majorNew ->{
+            News shortenedNews = new News();
+            shortenedNews.setId(majorNew.getId());
+            shortenedNews.setTitle(majorNew.getTitle());
+            shortenedNews.setImage(majorNew.getImage());
+            shortenedNews.setApproved(majorNew.isApproved());
+            String shortenedContent = majorNew.getContent().substring(0, 150) + "...";
+            shortenedNews.setContent(shortenedContent);
+            shortenedNews.setView(majorNew.getView());
+            return shortenedNews;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<News> getNewsByUserId(String userId) {
+        List<News> myNews= newsRepository.findNewsByUserId(userId);
+        return myNews.stream().map(myNew ->{
+            News shortenedNews = new News();
+            shortenedNews.setId(myNew.getId());
+            shortenedNews.setTitle(myNew.getTitle());
+            shortenedNews.setImage(myNew.getImage());
+            shortenedNews.setApproved(myNew.isApproved());
+            String shortenedContent = myNew.getContent().substring(0, 150) + "...";
+            shortenedNews.setContent(shortenedContent);
+            shortenedNews.setView(myNew.getView());
+            return shortenedNews;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<News> get5RecentNews() {
+        return newsRepository.findTop5ByOrderByCreateDateDesc();
     }
 
     @Override
@@ -66,5 +98,10 @@ public class NewsServiceImpl implements NewsService {
     public boolean deleteNews(String id) {
         newsRepository.deleteById(id);
         return true;
+    }
+
+    @Override
+    public List<News> get5MostView() {
+        return newsRepository.findTop5ByOrderByViewDesc();
     }
 }

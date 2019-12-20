@@ -4,6 +4,7 @@ import com.quangchinh.demo.dao.Comment;
 import com.quangchinh.demo.dao.News;
 import com.quangchinh.demo.dao.User;
 import com.quangchinh.demo.dto.CommentDTO;
+import com.quangchinh.demo.helper.AuthenticationHelper;
 import com.quangchinh.demo.service.CommentService;
 import com.quangchinh.demo.service.NewsService;
 import com.quangchinh.demo.service.UserService;
@@ -17,14 +18,14 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-    private final UserService userService;
     private final NewsService newsService;
+    private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    CommentController(CommentService commentService, UserService userService, NewsService newsService) {
+    CommentController(CommentService commentService, NewsService newsService, AuthenticationHelper authenticationHelper) {
         this.commentService = commentService;
-        this.userService = userService;
         this.newsService = newsService;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @GetMapping
@@ -32,10 +33,9 @@ public class CommentController {
         return commentService.getAll();
     }
 
-    @PostMapping(produces = "application/x-www-form-urlencoded;charset=UTF-8")
+    @PostMapping(produces = "application/json;charset=UTF-8")
     public Comment createComment(@RequestBody CommentDTO commentDTO) {
-        String userId = commentDTO.getUserId();
-        User user = userService.getById(userId);
+        User user = authenticationHelper.getLoggedInUser();
         String newId = commentDTO.getNewsId();
         News news = newsService.getById(newId);
 

@@ -52,7 +52,9 @@ public class UserController {
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(loginForm.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        final String username = loginForm.getUsername();
+        User user = userService.getByUsername(username);
+        return ResponseEntity.ok(new JwtResponse(token, user));
     }
 
     @GetMapping("/{id}")

@@ -5,13 +5,15 @@ import com.quangchinh.demo.dao.Majors;
 import com.quangchinh.demo.dao.News;
 import com.quangchinh.demo.dao.User;
 import com.quangchinh.demo.dto.NewsDTO;
+import com.quangchinh.demo.helper.AuthenticationHelper;
 import com.quangchinh.demo.service.CommentService;
 import com.quangchinh.demo.service.MajorsService;
 import com.quangchinh.demo.service.NewsService;
-import com.quangchinh.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -19,27 +21,40 @@ import java.util.List;
 public class NewsController {
 
     private final NewsService newsService;
-    private final UserService userService;
     private final CommentService commentService;
     private final MajorsService majorsService;
+    private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    NewsController(NewsService newsService, UserService userService, CommentService commentService, MajorsService majorsService) {
+    NewsController(NewsService newsService, CommentService commentService, MajorsService majorsService, AuthenticationHelper authenticationHelper) {
         this.newsService = newsService;
-        this.userService = userService;
         this.commentService = commentService;
         this.majorsService = majorsService;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @GetMapping
     public List<News> getAllNews() {
         return newsService.getAllShortenedContent();
     }
+    @GetMapping("/mypost")
+    public List<News> getMyNews(){
+        User user = authenticationHelper.getLoggedInUser();
+        return newsService.getNewsByUserId(user.getId());
+    }
 
-    @PostMapping()
-    public News createNews(@RequestBody NewsDTO newsDto) {
-        String userId = newsDto.getUserId();
-        User user = userService.getById(userId);
+    @GetMapping("/recent-post")
+    public  List<News> get5RecentNews(){
+        return  newsService.get5RecentNews();
+    }
+
+    @GetMapping("/most-views")
+    public  List<News> get5MostView(){
+        return  newsService.get5MostView();
+    }
+    @PostMapping("/create")
+    public ResponseEntity<News> createNews(@RequestBody NewsDTO newsDto) {
+        User user = authenticationHelper.getLoggedInUser();
         String majorId = newsDto.getMajorsId();
         Majors majors = majorsService.getById(majorId);
         if (user == null) {
@@ -53,12 +68,17 @@ public class NewsController {
         news.setApproved(newsDto.isApproved());
         news.setUser(user);
         news.setMajors(majors);
-        return newsService.create(news);
+        news.setCreateDate(new Date());
+        News createdNews = newsService.create(news);
+        return ResponseEntity.ok(createdNews);
     }
 
     @GetMapping("/{id}")
     public News getNews(@PathVariable String id) {
-        return newsService.getById(id);
+        News news= newsService.getById(id);
+        news.setView(news.getView()+1);
+        newsService.updateNews(news);
+        return news;
     }
 
     @GetMapping("/{id}/comments")

@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -22,6 +24,7 @@ public class News {
     private String content;
     private int view;
     private boolean approved;
+    Date createDate;
     @ManyToOne
     @JoinColumn(name ="user_id")
     private User user;

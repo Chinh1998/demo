@@ -38,16 +38,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/register").permitAll()
                 .antMatchers("/users/login").permitAll()
                 .antMatchers("/users").hasRole("ADMIN")
-                .antMatchers("/users/**").hasRole("MEMBER")
+                .antMatchers("/users/**").hasAnyRole("ADMIN", "MEMBER")
                 .antMatchers(HttpMethod.POST, "/users").hasAnyRole("ADMIN", "MEMBER")
                 .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN", "MEMBER")
                 .antMatchers(HttpMethod.PUT, "/users").hasAnyRole("ADMIN", "MEMBER")
                 //News Controller
                 .antMatchers("/news").permitAll()
-                .antMatchers(HttpMethod.POST, "/news").hasAnyRole("ADMIN", "MEMBER")
-                .antMatchers(HttpMethod.DELETE, "/news/**").hasAnyRole("ADMIN", "MEMBER")
+                .antMatchers("/news/mypost").permitAll()
+                .antMatchers(HttpMethod.POST, "/news/**").hasAnyRole("ADMIN", "MEMBER")
+              .antMatchers(HttpMethod.DELETE, "/news").hasAnyRole("ADMIN", "MEMBER")
 
                 .antMatchers(HttpMethod.PUT, "/news").hasAnyRole("ADMIN", "MEMBER")
+
                 // Disable form login
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

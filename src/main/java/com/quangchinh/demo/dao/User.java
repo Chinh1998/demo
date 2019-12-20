@@ -1,19 +1,14 @@
 package com.quangchinh.demo.dao;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "user_table")
 public class User {
 
@@ -23,7 +18,9 @@ public class User {
     private String id;
     private String username;
     private String password;
-    private String nbphone;
+    private int phone;
+    private String email;
+    private String functionuser;
     @ManyToMany
     Set<Role> roles;
 

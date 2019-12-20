@@ -14,9 +14,15 @@ public interface NewsService {
 
     List<News> getNewsByMajorsId(String id);
 
+    List<News> getNewsByUserId(String userId);
+
+    List<News> get5RecentNews();
+
     News getById(String id);
 
     News updateNews(News news);
 
     boolean deleteNews(String id);
+
+    List<News> get5MostView();
 }
