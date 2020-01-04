@@ -23,5 +23,4 @@ public class User {
     private String functionuser;
     @ManyToMany
     Set<Role> roles;
-
 }

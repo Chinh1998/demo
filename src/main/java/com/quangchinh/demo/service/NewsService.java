@@ -22,7 +22,13 @@ public interface NewsService {
 
     News updateNews(News news);
 
+    News approveNews(String newsId);
+
     boolean deleteNews(String id);
 
     List<News> get5MostView();
+
+    List<News> getPendingPostByUserId(String id);
+
+    List<News> getPendingNews();
 }

@@ -6,11 +6,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface NewsRepository extends JpaRepository<News, String> {
-    List<News> findNewsByMajorsId(String majorId);
 
-    List<News> findNewsByUserId(String userName);
+    List<News> findNewsByMajorsIdAndApprovedTrue(String majorId);
 
-    List<News> findTop5ByOrderByCreateDateDesc();
+    List<News> findNewsByUserIdAndApprovedTrue(String userId);
 
-    List<News> findTop5ByOrderByViewDesc();
+    List<News> findByApprovedTrue();
+
+    List<News> findTop5ByApprovedTrueOrderByViewDesc();
+
+    List<News> findTop5ByApprovedTrueOrderByCreateDateDesc();
+
+    List<News> findNewsByUserIdAndApprovedFalse(String userId);
+
+    List<News> findByApprovedFalse();
 }

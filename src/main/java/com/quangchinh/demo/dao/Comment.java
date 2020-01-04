@@ -9,14 +9,14 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "cmt_Table")
+@Table(name = "comment_table")
 public class Comment {
 
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    private String content_cmt;
+    private String content;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

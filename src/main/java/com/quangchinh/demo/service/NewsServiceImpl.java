@@ -32,55 +32,25 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> getAllShortenedContent() {
-        List<News> allNews = getAll();
-        return allNews.stream().map(news -> {
-            News shortenedNews = new News();
-            shortenedNews.setId(news.getId());
-            shortenedNews.setTitle(news.getTitle());
-            shortenedNews.setImage(news.getImage());
-            shortenedNews.setApproved(news.isApproved());
-            String shortenedContent = news.getContent().substring(0, 150) + "...";
-            shortenedNews.setContent(shortenedContent);
-            shortenedNews.setView(news.getView());
-            return shortenedNews;
-        }).collect(Collectors.toList());
+        List<News> allNews = getAllApproved();
+        return allNews.stream().peek(this::shortenNews).collect(Collectors.toList());
     }
 
     @Override
     public List<News> getNewsByMajorsId(String id) {
-        List<News> majorNews= newsRepository.findNewsByMajorsId(id);
-        return majorNews.stream().map(majorNew ->{
-            News shortenedNews = new News();
-            shortenedNews.setId(majorNew.getId());
-            shortenedNews.setTitle(majorNew.getTitle());
-            shortenedNews.setImage(majorNew.getImage());
-            shortenedNews.setApproved(majorNew.isApproved());
-            String shortenedContent = majorNew.getContent().substring(0, 150) + "...";
-            shortenedNews.setContent(shortenedContent);
-            shortenedNews.setView(majorNew.getView());
-            return shortenedNews;
-        }).collect(Collectors.toList());
+        List<News> majorNews = newsRepository.findNewsByMajorsIdAndApprovedTrue(id);
+        return majorNews.stream().peek(this::shortenNews).collect(Collectors.toList());
     }
 
     @Override
     public List<News> getNewsByUserId(String userId) {
-        List<News> myNews= newsRepository.findNewsByUserId(userId);
-        return myNews.stream().map(myNew ->{
-            News shortenedNews = new News();
-            shortenedNews.setId(myNew.getId());
-            shortenedNews.setTitle(myNew.getTitle());
-            shortenedNews.setImage(myNew.getImage());
-            shortenedNews.setApproved(myNew.isApproved());
-            String shortenedContent = myNew.getContent().substring(0, 150) + "...";
-            shortenedNews.setContent(shortenedContent);
-            shortenedNews.setView(myNew.getView());
-            return shortenedNews;
-        }).collect(Collectors.toList());
+        List<News> myNews = newsRepository.findNewsByUserIdAndApprovedTrue(userId);
+        return myNews.stream().peek(this::shortenNews).collect(Collectors.toList());
     }
 
     @Override
     public List<News> get5RecentNews() {
-        return newsRepository.findTop5ByOrderByCreateDateDesc();
+        return newsRepository.findTop5ByApprovedTrueOrderByCreateDateDesc();
     }
 
     @Override
@@ -95,6 +65,13 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public News approveNews(String newsId) {
+        News news = getById(newsId);
+        news.setApproved(true);
+        return updateNews(news);
+    }
+
+    @Override
     public boolean deleteNews(String id) {
         newsRepository.deleteById(id);
         return true;
@@ -102,6 +79,27 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> get5MostView() {
-        return newsRepository.findTop5ByOrderByViewDesc();
+        return newsRepository.findTop5ByApprovedTrueOrderByViewDesc();
+    }
+
+    @Override
+    public List<News> getPendingPostByUserId(String userId) {
+        List<News> myPendingPost = newsRepository.findNewsByUserIdAndApprovedFalse(userId);
+        return myPendingPost.stream().peek(this::shortenNews).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<News> getPendingNews() {
+        return newsRepository.findByApprovedFalse()
+                .stream().peek(this::shortenNews).collect(Collectors.toList());
+    }
+
+    private List<News> getAllApproved() {
+        return newsRepository.findByApprovedTrue();
+    }
+
+    private void shortenNews(News news) {
+        String shortenedContent = news.getContent().substring(0, 150) + "...";
+        news.setContent(shortenedContent);
     }
 }

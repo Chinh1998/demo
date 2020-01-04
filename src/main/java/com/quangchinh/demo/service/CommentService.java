@@ -13,6 +13,8 @@ public interface CommentService {
 
     List<Comment> getByNewsId(String newsId);
 
+    void deleteCommentByNewsId(String newId);
+
     Comment updateComment(Comment comment);
 
     boolean deleteComment(String id);

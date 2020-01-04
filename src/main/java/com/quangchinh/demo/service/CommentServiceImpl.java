@@ -40,6 +40,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public void deleteCommentByNewsId(String newId) {
+        commentRepository.deleteByNewsId(newId);
+    }
+
+
+    @Override
     public Comment updateComment(Comment comment) {
         return commentRepository.save(comment);
     }

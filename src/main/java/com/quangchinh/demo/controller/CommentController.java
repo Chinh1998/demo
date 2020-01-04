@@ -7,14 +7,13 @@ import com.quangchinh.demo.dto.CommentDTO;
 import com.quangchinh.demo.helper.AuthenticationHelper;
 import com.quangchinh.demo.service.CommentService;
 import com.quangchinh.demo.service.NewsService;
-import com.quangchinh.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/cmt")
+@RequestMapping("/comment")
 public class CommentController {
 
     private final CommentService commentService;
@@ -44,7 +43,7 @@ public class CommentController {
         }
 
         Comment comment = new Comment();
-        comment.setContent_cmt(commentDTO.getContent());
+        comment.setContent(commentDTO.getContent());
         comment.setUser(user);
         comment.setNews(news);
 
