@@ -3,26 +3,17 @@ package com.quangchinh.demo.dao;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
-import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "user_table")
-public class User {
-
+@Table(name = "position_table")
+public class Position {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    private String username;
-    private String password;
-    private int phone;
-    private String email;
-    @ManyToMany
-    Set<Role> roles;
-    @ManyToOne
-    @JoinColumn(name = "position_id")
-    private  Position position;
+    private String name;
 }

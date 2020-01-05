@@ -1,7 +1,10 @@
 package com.quangchinh.demo.controller;
 
+import com.quangchinh.demo.dao.Position;
 import com.quangchinh.demo.dto.JwtResponse;
+import com.quangchinh.demo.dto.UserDTO;
 import com.quangchinh.demo.model.LoginForm;
+import com.quangchinh.demo.service.PositionService;
 import com.quangchinh.demo.service.UserService;
 import com.quangchinh.demo.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.quangchinh.demo.dao.User;
 
@@ -26,13 +30,16 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
+    private final PositionService positionService;
 
     @Autowired
-    UserController(UserService userService, AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil) {
+    UserController(UserService userService, AuthenticationManager authenticationManager,
+                   UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, PositionService positionService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.positionService = positionService;
     }
 
     @GetMapping
@@ -41,7 +48,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User createUser(@RequestBody User user) {
+    public User createUser(@RequestBody UserDTO userDTO) {
+        Optional<Position> position = positionService.getById(userDTO.getPositionId());
+        User user=new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        user.setEmail(userDTO.getEmail());
+        user.setPhone(userDTO.getPhone());
+        user.setPosition(position.get());
         return userService.create(user);
     }
 
