@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, String> {
 
-    List<Comment> findAllByNewsId(String newId);
+    List<Comment> findAllByNewsIdOrderByCreateDateAsc(String newId);
 
     @Transactional
     void deleteByNewsId(String newsId);

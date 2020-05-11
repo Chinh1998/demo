@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -17,6 +18,7 @@ public class Comment {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String content;
+    Date createDate;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

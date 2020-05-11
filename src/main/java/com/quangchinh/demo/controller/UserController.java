@@ -3,6 +3,7 @@ package com.quangchinh.demo.controller;
 import com.quangchinh.demo.dao.Position;
 import com.quangchinh.demo.dto.JwtResponse;
 import com.quangchinh.demo.dto.UserDTO;
+import com.quangchinh.demo.helper.AuthenticationHelper;
 import com.quangchinh.demo.model.LoginForm;
 import com.quangchinh.demo.service.PositionService;
 import com.quangchinh.demo.service.UserService;
@@ -28,15 +29,17 @@ public class UserController {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final AuthenticationHelper authenticationHelper;
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
     private final PositionService positionService;
 
     @Autowired
     UserController(UserService userService, AuthenticationManager authenticationManager,
-                   UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, PositionService positionService) {
+                   AuthenticationHelper authenticationHelper, UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, PositionService positionService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.authenticationHelper = authenticationHelper;
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.positionService = positionService;
@@ -69,6 +72,15 @@ public class UserController {
         final String username = loginForm.getUsername();
         User user = userService.getByUsername(username);
         return ResponseEntity.ok(new JwtResponse(token, user));
+    }
+
+    @GetMapping("/islogin")
+    public boolean getUserLogin(){
+        User user = authenticationHelper.getLoggedInUser();
+        if(user==null){
+            return false;
+        }
+        return true;
     }
 
     @GetMapping("/{id}")

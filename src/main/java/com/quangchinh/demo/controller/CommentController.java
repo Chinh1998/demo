@@ -8,8 +8,12 @@ import com.quangchinh.demo.helper.AuthenticationHelper;
 import com.quangchinh.demo.service.CommentService;
 import com.quangchinh.demo.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -39,15 +43,17 @@ public class CommentController {
         News news = newsService.getById(newId);
 
         if (user == null && news == null) {
-            return null;
+            return  null;
+        }else {
+
+            Comment comment = new Comment();
+            comment.setContent(commentDTO.getContent());
+            comment.setUser(user);
+            comment.setNews(news);
+            comment.setCreateDate(new Date());
+
+            return commentService.create(comment);
         }
-
-        Comment comment = new Comment();
-        comment.setContent(commentDTO.getContent());
-        comment.setUser(user);
-        comment.setNews(news);
-
-        return commentService.create(comment);
     }
 
     @GetMapping("/{id}")

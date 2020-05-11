@@ -10,6 +10,5 @@ public class CommentDTO {
 
     @JsonProperty("content_cmt")
     private String content;
-    private String userId; // Camelcase
     private String newsId;
 }

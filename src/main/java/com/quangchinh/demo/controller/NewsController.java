@@ -6,10 +6,15 @@ import com.quangchinh.demo.helper.AuthenticationHelper;
 import com.quangchinh.demo.service.CommentService;
 import com.quangchinh.demo.service.MajorsService;
 import com.quangchinh.demo.service.NewsService;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +26,9 @@ public class NewsController {
     private final CommentService commentService;
     private final MajorsService majorsService;
     private final AuthenticationHelper authenticationHelper;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Autowired
     NewsController(NewsService newsService, CommentService commentService, MajorsService majorsService,
@@ -86,6 +94,10 @@ public class NewsController {
         return ResponseEntity.ok(createdNews);
     }
 
+    @GetMapping("/mypendingpost/{id}")
+    public News getNewsPending(@PathVariable String id) {
+        return newsService.getById((id));
+    }
     @GetMapping("/{id}")
     public News getNews(@PathVariable String id) {
         News news = newsService.getById(id);
@@ -93,7 +105,6 @@ public class NewsController {
         newsService.updateNews(news);
         return news;
     }
-
     @GetMapping("/{id}/comments")
     public List<Comment> getNewsComments(@PathVariable String id) {
         return commentService.getByNewsId(id);
@@ -118,5 +129,27 @@ public class NewsController {
 
     private Boolean isAdmin(User user) {
         return user.getRoles().stream().anyMatch(role -> "ADMIN".equals(role.getName()));
+    }
+
+    @GetMapping("/search")
+    public List<News> fullTextSearch(@RequestParam(value = "searchKey") String searchKey) {
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+
+        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder()
+                .forEntity(News.class)
+                .get();
+
+        org.apache.lucene.search.Query query = queryBuilder
+                .keyword()
+                .onFields("title", "content")
+                .matching(searchKey)
+                .createQuery();
+
+        FullTextQuery jpaQuery
+                = fullTextEntityManager.createFullTextQuery(query, News.class);
+
+        return jpaQuery.getResultList();
+
     }
 }

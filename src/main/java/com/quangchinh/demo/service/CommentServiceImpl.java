@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getByNewsId(String newsId) {
-        return commentRepository.findAllByNewsId(newsId);
+        return commentRepository.findAllByNewsIdOrderByCreateDateAsc(newsId);
     }
 
     @Override

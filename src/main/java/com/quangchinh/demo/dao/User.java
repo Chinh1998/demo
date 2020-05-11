@@ -3,6 +3,7 @@ package com.quangchinh.demo.dao;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -20,9 +21,9 @@ public class User {
     private String password;
     private int phone;
     private String email;
-    @ManyToMany
-    Set<Role> roles;
     @ManyToOne
     @JoinColumn(name = "position_id")
     private  Position position;
+    @ManyToMany
+    Set<Role> roles;
 }

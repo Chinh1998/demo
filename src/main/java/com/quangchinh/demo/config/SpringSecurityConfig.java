@@ -37,6 +37,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 // User controller
                 .antMatchers("/users/register").permitAll()
                 .antMatchers("/users/login").permitAll()
+                .antMatchers("/users/islogin").permitAll()
                 .antMatchers("/users").hasRole("ADMIN")
                 .antMatchers("/users/**").hasAnyRole("ADMIN", "MEMBER")
                 .antMatchers(HttpMethod.POST, "/users").hasAnyRole("ADMIN", "MEMBER")
@@ -45,6 +46,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 //News Controller
                 .antMatchers("/news").permitAll()
                 .antMatchers("/news/mypost").permitAll()
+                .antMatchers(HttpMethod.GET,"/news/search").permitAll()
                 .antMatchers(HttpMethod.POST, "/news/**").hasAnyRole("ADMIN", "MEMBER")
               .antMatchers(HttpMethod.DELETE, "/news").hasAnyRole("ADMIN", "MEMBER")
 
